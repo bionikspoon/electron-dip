@@ -1,0 +1,17 @@
+{
+  "name": "electron-dip",
+  "version": "0.0.0",
+  "description": "Checking out ELECTRON!!!!",
+  "main": "index.ts",
+  "repository": "git@github.com:bionikspoon/electron-dip.git",
+  "author": "Manu Phatak <manu@thinkcerca.com>",
+  "license": "MIT",
+  "private": true,
+  "devDependencies": {
+    "electron": "^3.0.5",
+    "electron-forge": "^5.2.2",
+    "eslint": "^5.7.0",
+    "typescript": "^3.1.3"
+  },
+  "build": {}
+}

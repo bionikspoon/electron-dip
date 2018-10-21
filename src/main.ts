@@ -17,12 +17,14 @@ if (isDevMode) {
 const createWindow = async () => {
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    height: 700,
+    width: 368,
+    resizable: false,
+    frame: false,
   })
 
   // and load the index.html of the app.
-  mainWindow.loadURL(`file://${__dirname}/index.html`)
+  mainWindow.loadURL(`file://${__dirname}/app/index.html`)
 
   // Open the DevTools.
   if (isDevMode) {

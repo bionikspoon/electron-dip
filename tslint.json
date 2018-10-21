@@ -4,7 +4,13 @@
   "jsRules": {},
   "rules": {
     "object-literal-sort-keys": false,
-    "curly": [true, "ignore-same-line"]
+    "curly": [true, "ignore-same-line"],
+    "variable-name": [
+      true,
+      "check-format",
+      "allow-leading-underscore",
+      "allow-trailing-underscore"
+    ]
   },
   "rulesDirectory": []
 }

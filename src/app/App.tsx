@@ -1,11 +1,12 @@
 import * as React from 'react'
+import { remote } from 'electron'
 
 export default class App extends React.Component<{}, {}> {
   public render() {
     return (
       <React.Fragment>
-        <div className="settings" />
-        <div className="close" />
+        <div className="settings" onClick={this.handleSettingsClick} />
+        <div className="close" onClick={this.handleCloseClick} />
         <main id="main" className="container-fluid">
           <div className="row">
             <div className="col-12">
@@ -44,6 +45,13 @@ export default class App extends React.Component<{}, {}> {
         </main>
       </React.Fragment>
     )
+  }
+
+  private handleSettingsClick = (_event: React.MouseEvent<HTMLDivElement>) => {}
+  private handleCloseClick = (_event: React.MouseEvent<HTMLDivElement>) => {
+    const window = remote.getCurrentWindow()
+
+    window.close()
   }
 }
 

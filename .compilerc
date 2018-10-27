@@ -2,44 +2,44 @@
   "env": {
     "development": {
       "text/typescript": {
-        "removeComments": false,
-        "preserveConstEnums": true,
         "declaration": true,
-        "noImplicitAny": true,
-        "noImplicitReturns": true,
-        "suppressImplicitAnyIndexErrors": true,
-        "strictNullChecks": true,
-        "noUnusedLocals": true,
-        "noImplicitThis": true,
-        "noUnusedParameters": true,
+        "experimentalDecorators": true,
+        "importHelpers": true,
         "inlineSourceMap": true,
         "inlineSources": true,
-        "importHelpers": true,
-        "noEmitHelpers": true,
-        "experimentalDecorators": true,
-        "target": "es2015",
+        "jsx": "react",
         "module": "commonjs",
-        "jsx": "react"
+        "noEmitHelpers": true,
+        "noImplicitAny": true,
+        "noImplicitReturns": true,
+        "noImplicitThis": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "preserveConstEnums": true,
+        "removeComments": false,
+        "strictNullChecks": true,
+        "suppressImplicitAnyIndexErrors": true,
+        "target": "es2015"
       }
     },
     "production": {
       "text/typescript": {
-        "removeComments": false,
-        "preserveConstEnums": true,
         "declaration": true,
+        "experimentalDecorators": true,
+        "importHelpers": true,
+        "jsx": "react",
+        "noEmitHelpers": true,
         "noImplicitAny": true,
         "noImplicitReturns": true,
-        "suppressImplicitAnyIndexErrors": true,
-        "strictNullChecks": true,
-        "noUnusedLocals": true,
         "noImplicitThis": true,
+        "noUnusedLocals": true,
         "noUnusedParameters": true,
+        "preserveConstEnums": true,
+        "removeComments": false,
         "sourceMap": false,
-        "importHelpers": true,
-        "noEmitHelpers": true,
-        "experimentalDecorators": true,
-        "target": "es2015",
-        "jsx": "react"
+        "strictNullChecks": true,
+        "suppressImplicitAnyIndexErrors": true,
+        "target": "es2015"
       }
     }
   }

@@ -4,6 +4,8 @@ import installExtension, {
   REACT_DEVELOPER_TOOLS,
 } from 'electron-devtools-installer'
 
+import * as configuration from './configuration'
+
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow: BrowserWindow | null = null
@@ -14,45 +16,7 @@ if (isDevMode) {
   enableLiveReload({ strategy: 'react-hmr' })
 }
 
-const createWindow = async () => {
-  // Create the browser window.
-  mainWindow = new BrowserWindow({
-    height: 700,
-    width: 368,
-    resizable: false,
-    frame: false,
-  })
-
-  // and load the index.html of the app.
-  mainWindow.loadURL(`file://${__dirname}/app/home/home.html`)
-
-  // Open the DevTools.
-  if (isDevMode) {
-    await installExtension(REACT_DEVELOPER_TOOLS)
-    require('devtron').install()
-    mainWindow.webContents.openDevTools()
-  }
-
-  // Emitted when the window is closed.
-  mainWindow.on('closed', () => {
-    // Dereference the window object, usually you would store windows
-    // in an array if your app supports multi windows, this is the time
-    // when you should delete the corresponding element.
-    mainWindow = null
-  })
-
-  globalShortcut.register('CmdOrCtrl+Shift+1', () => {
-    if (!mainWindow) return
-
-    mainWindow.webContents.send('global-shortcut', 0)
-  })
-
-  globalShortcut.register('CmdOrCtrl+Shift+2', () => {
-    if (!mainWindow) return
-
-    mainWindow.webContents.send('global-shortcut', 1)
-  })
-}
+app.commandLine.appendSwitch('--autoplay-policy', 'no-user-gesture-required')
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
@@ -100,3 +64,57 @@ ipcMain.on('open-settings-window', async () => {
     settingsWindow = null
   })
 })
+
+async function createWindow() {
+  // Create the browser window.
+  mainWindow = new BrowserWindow({
+    height: 700,
+    width: 368,
+    resizable: false,
+    frame: false,
+  })
+
+  // and load the index.html of the app.
+  mainWindow.loadURL(`file://${__dirname}/app/home/home.html`)
+
+  // Open the DevTools.
+  if (isDevMode) {
+    await installExtension(REACT_DEVELOPER_TOOLS)
+    require('devtron').install()
+    mainWindow.webContents.openDevTools()
+  }
+
+  if (!configuration.readSettings('shortcutKeys')) {
+    configuration.saveSettings('shortcutKeys', ['CmdOrCtrl', 'Shift'])
+  }
+
+  // Emitted when the window is closed.
+  mainWindow.on('closed', () => {
+    // Dereference the window object, usually you would store windows
+    // in an array if your app supports multi windows, this is the time
+    // when you should delete the corresponding element.
+    mainWindow = null
+  })
+  setGlobalShortcuts()
+}
+
+function setGlobalShortcuts() {
+  globalShortcut.unregisterAll()
+
+  const shortcutKeysSettings = configuration.readSettings('shortcutKeys')
+
+  const shortcutPrefix =
+    shortcutKeysSettings.length === 0 ? '' : shortcutKeysSettings.join('+')
+
+  globalShortcut.register(`${shortcutPrefix}+1`, () => {
+    if (!mainWindow) return
+
+    mainWindow.webContents.send('global-shortcut', 0)
+  })
+
+  globalShortcut.register(`${shortcutPrefix}+2`, () => {
+    if (!mainWindow) return
+
+    mainWindow.webContents.send('global-shortcut', 1)
+  })
+}

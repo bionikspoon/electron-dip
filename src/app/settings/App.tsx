@@ -1,5 +1,5 @@
 import * as React from 'react'
-import * as configuration from '../../configuration'
+import config from '../../config'
 import CloseButton from '../shared/CloseButton'
 import { ipcRenderer } from 'electron'
 
@@ -8,7 +8,7 @@ export default class App extends React.Component<{}, {}> {
 
   public async componentDidMount() {
     this.setState({ loading: false })
-    const selectedOptions = await configuration.readSettings('shortcutKeys')
+    const selectedOptions = await config.get('shortcutKeys')
     this.setState({ selectedOptions, loading: false })
   }
 
@@ -50,7 +50,7 @@ export default class App extends React.Component<{}, {}> {
 
   private handleChange = async (selectedOptions: Modifiers[]) => {
     this.setState({ selectedOptions })
-    await configuration.saveSettings('shortcutKeys', selectedOptions)
+    await config.set('shortcutKeys', selectedOptions)
     ipcRenderer.send('set-global-shortcuts')
   }
 }

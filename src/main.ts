@@ -1,10 +1,18 @@
-import { app, BrowserWindow, globalShortcut, ipcMain } from 'electron'
+import {
+  app,
+  BrowserWindow,
+  globalShortcut,
+  ipcMain,
+  ipcRenderer,
+  Menu,
+  Tray,
+} from 'electron'
 import { enableLiveReload } from 'electron-compile'
 import installExtension, {
   REACT_DEVELOPER_TOOLS,
 } from 'electron-devtools-installer'
-
-import * as configuration from './configuration'
+import * as path from 'path'
+import config from './config'
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -44,8 +52,8 @@ app.on('activate', () => {
 // code. You can also put them in separate files and import them here.
 let settingsWindow: BrowserWindow | null = null
 
-ipcMain.on('open-settings-window', async () => {
-  if (settingsWindow) return
+async function openSettingsWindow() {
+  if (settingsWindow) return settingsWindow.focus()
 
   settingsWindow = new BrowserWindow({
     height: 200,
@@ -63,8 +71,9 @@ ipcMain.on('open-settings-window', async () => {
   settingsWindow.on('closed', () => {
     settingsWindow = null
   })
-})
+}
 
+ipcMain.on('open-settings-window', openSettingsWindow)
 ipcMain.on('set-global-shortcuts', setGlobalShortcuts)
 
 async function createWindow() {
@@ -79,6 +88,28 @@ async function createWindow() {
   // and load the index.html of the app.
   mainWindow.loadURL(`file://${__dirname}/app/home/home.html`)
 
+  const trayIcon =
+    process.platform === 'darwin'
+      ? path.join(__dirname, 'icon/tray-iconTemplate.png')
+      : path.join(__dirname, 'img/tray-icon-alt.png')
+  const tray = new Tray(trayIcon)
+  const contextMenu = Menu.buildFromTemplate([
+    {
+      label: 'Sound machine',
+      enabled: false,
+    },
+    {
+      label: 'Settings',
+      click: openSettingsWindow,
+    },
+    {
+      label: 'Quit',
+      click: () => mainWindow && mainWindow.close(),
+    },
+  ])
+  tray.setToolTip('This is my application.')
+  tray.setContextMenu(contextMenu)
+
   // Open the DevTools.
   if (isDevMode) {
     await installExtension(REACT_DEVELOPER_TOOLS)
@@ -86,8 +117,8 @@ async function createWindow() {
     mainWindow.webContents.openDevTools()
   }
 
-  if (!(await configuration.readSettings('shortcutKeys'))) {
-    await configuration.saveSettings('shortcutKeys', ['CmdOrCtrl', 'Shift'])
+  if (!(await config.get('shortcutKeys'))) {
+    await config.set('shortcutKeys', ['CmdOrCtrl', 'Shift'])
   }
 
   // Emitted when the window is closed.
@@ -103,7 +134,7 @@ async function createWindow() {
 async function setGlobalShortcuts() {
   globalShortcut.unregisterAll()
 
-  const shortcutKeysSettings = await configuration.readSettings('shortcutKeys')
+  const shortcutKeysSettings = await config.get('shortcutKeys')
 
   const shortcutPrefix =
     shortcutKeysSettings.length === 0 ? '' : shortcutKeysSettings.join('+')

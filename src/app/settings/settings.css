@@ -1,0 +1,16 @@
+#App {
+  background-color: #044d7f;
+}
+
+#main {
+  color: #ffffff;
+}
+
+input,
+label {
+  -webkit-app-region: no-drag;
+}
+
+.title {
+  margin-top: 8px;
+}

@@ -1,11 +1,4 @@
-html,
-body,
 #App {
-  -webkit-app-region: drag;
-  -webkit-user-select: none;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
   background-color: #0c7ca2;
 }
 
@@ -36,8 +29,7 @@ body,
   height: 31px;
 }
 
-.settings,
-.close {
+.settings {
   cursor: pointer;
   display: inline-block;
   height: 32px;
@@ -45,21 +37,11 @@ body,
   top: 6px;
   width: 32px;
   z-index: 1;
-  text-indent: -10000px;
-
-  -webkit-app-region: no-drag;
-}
-
-.settings {
   background: transparent url('img/settings.png') no-repeat 4px 4px;
   background-size: 24px 24px;
   right: 38px;
-}
 
-.close {
-  background: transparent url('img/close.png') no-repeat 4px 4px;
-  background-size: 24px 24px;
-  right: 6px;
+  -webkit-app-region: no-drag;
 }
 
 .buttons {

@@ -29,6 +29,7 @@ const createWindow = async () => {
   // Open the DevTools.
   if (isDevMode) {
     await installExtension(REACT_DEVELOPER_TOOLS)
+    require('devtron').install()
     mainWindow.webContents.openDevTools()
   }
 

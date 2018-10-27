@@ -1,7 +1,7 @@
+import { ipcRenderer } from 'electron'
 import * as React from 'react'
 import config from '../../config'
 import CloseButton from '../shared/CloseButton'
-import { ipcRenderer } from 'electron'
 
 export default class App extends React.Component<{}, {}> {
   public state = { selectedOptions: [], loading: false }

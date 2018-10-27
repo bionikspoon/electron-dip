@@ -3,7 +3,6 @@ import {
   BrowserWindow,
   globalShortcut,
   ipcMain,
-  ipcRenderer,
   Menu,
   Tray,
 } from 'electron'

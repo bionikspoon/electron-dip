@@ -1,14 +1,21 @@
 import * as nconf from 'nconf'
+import { promisify } from 'util'
 
-const conf = nconf.file({ file: `${getUserHome()}/electron-dip.json` })
+const file = `${getUserHome()}/electron-dip.json`
 
-export function saveSettings(key: string, value: any) {
+const conf = nconf.file({ file })
+const asyncSave = promisify(conf.save.bind(conf))
+const asyncLoad = promisify(conf.load.bind(conf))
+
+type Key = 'shortcutKeys'
+
+export async function saveSettings(key: Key, value: any) {
   conf.set(key, value)
-  conf.save()
+  await asyncSave(undefined)
 }
 
-export function readSettings(key: string) {
-  conf.load()
+export async function readSettings(key: Key) {
+  await asyncLoad()
   return conf.get(key)
 }
 

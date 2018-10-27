@@ -65,6 +65,8 @@ ipcMain.on('open-settings-window', async () => {
   })
 })
 
+ipcMain.on('set-global-shortcuts', setGlobalShortcuts)
+
 async function createWindow() {
   // Create the browser window.
   mainWindow = new BrowserWindow({
@@ -84,8 +86,8 @@ async function createWindow() {
     mainWindow.webContents.openDevTools()
   }
 
-  if (!configuration.readSettings('shortcutKeys')) {
-    configuration.saveSettings('shortcutKeys', ['CmdOrCtrl', 'Shift'])
+  if (!(await configuration.readSettings('shortcutKeys'))) {
+    await configuration.saveSettings('shortcutKeys', ['CmdOrCtrl', 'Shift'])
   }
 
   // Emitted when the window is closed.
@@ -98,10 +100,10 @@ async function createWindow() {
   setGlobalShortcuts()
 }
 
-function setGlobalShortcuts() {
+async function setGlobalShortcuts() {
   globalShortcut.unregisterAll()
 
-  const shortcutKeysSettings = configuration.readSettings('shortcutKeys')
+  const shortcutKeysSettings = await configuration.readSettings('shortcutKeys')
 
   const shortcutPrefix =
     shortcutKeysSettings.length === 0 ? '' : shortcutKeysSettings.join('+')

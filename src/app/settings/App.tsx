@@ -7,6 +7,8 @@ export default class App extends React.Component<{}, {}> {
   public state = { selectedOptions: [], loading: false }
 
   public async componentDidMount() {
+    console.log('process.execPath', process.execPath)
+
     this.setState({ loading: false })
     const selectedOptions = await config.get('shortcutKeys')
     this.setState({ selectedOptions, loading: false })

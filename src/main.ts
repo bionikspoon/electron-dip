@@ -17,9 +17,10 @@ import config from './config'
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow: BrowserWindow | null = null
 
-const isDevMode = process.execPath.match(/[\\/]electron/)
+const isDevMode = () =>
+  process.mainModule && !process.mainModule.filename.includes('app.asar')
 
-if (isDevMode) {
+if (isDevMode()) {
   enableLiveReload({ strategy: 'react-hmr' })
 }
 
@@ -60,8 +61,7 @@ async function openSettingsWindow() {
     resizable: false,
     frame: false,
   })
-  if (isDevMode) {
-    await installExtension(REACT_DEVELOPER_TOOLS)
+  if (isDevMode()) {
     settingsWindow.webContents.openDevTools()
   }
 
@@ -76,6 +76,11 @@ ipcMain.on('open-settings-window', openSettingsWindow)
 ipcMain.on('set-global-shortcuts', setGlobalShortcuts)
 
 async function createWindow() {
+  if (isDevMode()) {
+    require('devtron').install()
+    installExtension(REACT_DEVELOPER_TOOLS)
+  }
+
   // Create the browser window.
   mainWindow = new BrowserWindow({
     height: 700,
@@ -110,9 +115,7 @@ async function createWindow() {
   tray.setContextMenu(contextMenu)
 
   // Open the DevTools.
-  if (isDevMode) {
-    await installExtension(REACT_DEVELOPER_TOOLS)
-    require('devtron').install()
+  if (isDevMode()) {
     mainWindow.webContents.openDevTools()
   }
 
